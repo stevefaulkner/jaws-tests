@@ -74,8 +74,6 @@
 
     .Client {
       display: flex;
-      flex-direction: column;
-      height: 50px;
       height: 100%;
     }
 
@@ -86,10 +84,13 @@
 
     .Client-body {
       display: flex;
+      flex-direction: column;
       flex-grow: 1;
     }
 
     .ChannelListContainer {
+      display: flex;
+      flex-direction: column;
       flex-basis: 220px;
       flex-shrink: 0;
       background: #303E4D;
@@ -120,8 +121,7 @@
     .TeamMenu {
       display: flex;
       flex-shrink: 0;
-      flex-basis: 220px;
-      height: 100%;
+      flex-basis: 50px;
       padding: 10px;
       background: #303E4D;
       color: white;
@@ -168,13 +168,10 @@
 
     /* Channel list */
 
-    .ChannelListContainer {
-      padding: 10px;
-    }
-
     .ChannelList {
-      padding: 0; 
-      margin: 0; 
+      padding: 10px;
+      margin: 0;
+      flex-grow: 1; 
     }
 
     .ChannelList-item {
@@ -277,53 +274,55 @@
 
 <div class="Client">
 
-  <div class="Client-header u-FlexParent" data-focusable-landmark="2" tabindex="-1">
+  <div class="ChannelListContainer" data-focusable-landmark="1" tabindex="-1">
     <div class="TeamMenu">
-        <button type="button" class="LinkButton">Slack Corp</button>
+      <button type="button" class="LinkButton">Slack Corp</button>
     </div>
-    <div class="ChannelHeader u-FlexParent u-FlexChildMaxWidth">
-      <div class="MessagesHeader u-FlexChildMaxWidth u-FlexParent u-flexChildManagedOverflow">
-        <div class="ChannelTitle u-FlexChildMaxWidth u-flexChildManagedOverflow">
-          <div class="ChannelName u-flexChildManagedOverflow">
-              <button type="button" class="LinkButton u-TextOverflowEllipsis">#feat-a11y-keyboard</button>
-          </div>
-          <div class="ChannelHeaderInfo u-FlexParent u-flexChildManagedOverflow ">
-            <div class="ChannelHeaderInfo-item u-flexChildManagedOverflow">
-              <button type="button" class="LinkButton u-TextOverflowEllipsis">10 Members</button>
-            </div>
-            <div class="ChannelHeaderInfo-item u-flexChildManagedOverflow">
-              <button type="button" class="LinkButton u-TextOverflowEllipsis">1 Pinned item</button>
-            </div>
-            <div class="ChannelHeaderInfo-item u-flexChildManagedOverflow">
-              <div tabindex="0" class="u-flexChildManagedOverflow">
-                <div class="u-TextOverflowEllipsis">The channel topic text.</div>
-              </div>
-            </div>
-          </div>
-        </div>
-        <div class="ChannelActions u-FlexParent">
-          <button type="button" class="IconButton ChannelActions-button">1</button>
-          <button type="button" class="IconButton ChannelActions-button">2</button>
-          <button type="button" class="IconButton ChannelActions-button">3</button>
-        </div>
-      </div>
-      <div class="FlexPaneHeader u-FlexParent">
-        <input type="text" placeholder="Search" class="SearchInput">
-        <button type="button" class="IconButton FlexPaneHeader-button">1</button>
-        <button type="button" class="IconButton FlexPaneHeader-button">2</button>
-        <button type="button" class="IconButton FlexPaneHeader-button">3</button>
-      </div>
-    </div>
+    <ul class="ChannelList"></ul>
   </div>
   
   <div class="Client-body">
-    <div class="ChannelListContainer" data-focusable-landmark="1" tabindex="-1">
-      <ul class="ChannelList"></ul>
+
+     <div class="Client-header u-FlexParent" data-focusable-landmark="2" tabindex="-1">
+      <div class="ChannelHeader u-FlexParent u-FlexChildMaxWidth">
+        <div class="MessagesHeader u-FlexChildMaxWidth u-FlexParent u-flexChildManagedOverflow">
+          <div class="ChannelTitle u-FlexChildMaxWidth u-flexChildManagedOverflow">
+            <div class="ChannelName u-flexChildManagedOverflow">
+                <button type="button" class="LinkButton u-TextOverflowEllipsis">#feat-a11y-keyboard</button>
+            </div>
+            <div class="ChannelHeaderInfo u-FlexParent u-flexChildManagedOverflow ">
+              <div class="ChannelHeaderInfo-item u-flexChildManagedOverflow">
+                <button type="button" class="LinkButton u-TextOverflowEllipsis">10 Members</button>
+              </div>
+              <div class="ChannelHeaderInfo-item u-flexChildManagedOverflow">
+                <button type="button" class="LinkButton u-TextOverflowEllipsis">1 Pinned item</button>
+              </div>
+              <div class="ChannelHeaderInfo-item u-flexChildManagedOverflow">
+                <div tabindex="0" class="u-flexChildManagedOverflow">
+                  <div class="u-TextOverflowEllipsis">The channel topic text.</div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="ChannelActions u-FlexParent">
+            <button type="button" class="IconButton ChannelActions-button">1</button>
+            <button type="button" class="IconButton ChannelActions-button">2</button>
+            <button type="button" class="IconButton ChannelActions-button">3</button>
+          </div>
+        </div>
+        <div class="FlexPaneHeader u-FlexParent">
+          <input type="text" placeholder="Search" class="SearchInput">
+          <button type="button" class="IconButton FlexPaneHeader-button">1</button>
+          <button type="button" class="IconButton FlexPaneHeader-button">2</button>
+          <button type="button" class="IconButton FlexPaneHeader-button">3</button>
+        </div>
+      </div>
     </div>
+
     <div class="MessagePane" data-focusable-landmark="3" tabindex="-1">
       <div class="MessageList" tabindex="0"></div>
       <div class="MessageInputContainer">
-        <textarea class="MessageInputContainer-textarea" data-focusable-landmark="0"></textarea>
+        <textarea class="MessageInputContainer-textarea" data-focusable-landmark="0" tabindex="1"></textarea>
       </div>    
     </div>
   </div>
@@ -611,7 +610,6 @@
       focusable.focus();
     }
   });
-
 
   $('.MessageList').on('focus', '.Message', function(e) {
     var target = e.target;
