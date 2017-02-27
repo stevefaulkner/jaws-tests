@@ -21,7 +21,13 @@
     body[mode=mouse] a:focus,
     body[mode=mouse] div[tabindex] {
       outline: none;
+      box-shadow: none;
     }    
+
+    div[data-focusable-landmark]:focus {
+      outline: none;
+      box-shadow: inset 0 0 6px #005E99;
+    }
 
     /* Utils */
 
@@ -89,6 +95,14 @@
       background: #303E4D;
     }
 
+    div[data-focusable-landmark].ChannelListContainer:focus {
+      box-shadow: inset 0 0 6px white;
+    }
+
+    .ChannelListContainer a:focus {
+      outline-color: white;
+    }
+
     .MessagePane {
       display: flex;
       flex-grow: 1;
@@ -112,6 +126,10 @@
       background: #303E4D;
       color: white;
       font-size: 18px;
+    }    
+
+    .TeamMenu button:focus {
+      outline-color: white;
     }    
 
     .ChannelName {
@@ -176,6 +194,10 @@
       flex-grow: 1;
       padding: 10px;
       overflow-y: scroll;
+    }
+
+    .MessageList:focus {
+      outline: none;
     }
 
     .MessageInputContainer {
@@ -255,7 +277,7 @@
 
 <div class="Client">
 
-  <div class="Client-header u-FlexParent FocusableLandmark" tabindex="-1">
+  <div class="Client-header u-FlexParent" data-focusable-landmark="2" tabindex="-1">
     <div class="TeamMenu">
         <button type="button" class="LinkButton">Slack Corp</button>
     </div>
@@ -295,13 +317,13 @@
   </div>
   
   <div class="Client-body">
-    <div class="ChannelListContainer FocusableLandmark" tabindex="-1">
+    <div class="ChannelListContainer" data-focusable-landmark="1" tabindex="-1">
       <ul class="ChannelList"></ul>
     </div>
-    <div class="MessagePane FocusableLandmark" tabindex="-1">
+    <div class="MessagePane" data-focusable-landmark="3" tabindex="-1">
       <div class="MessageList" tabindex="0"></div>
       <div class="MessageInputContainer">
-        <textarea class="MessageInputContainer-textarea FocusableLandmark"></textarea>
+        <textarea class="MessageInputContainer-textarea" data-focusable-landmark="0"></textarea>
       </div>    
     </div>
   </div>
@@ -314,10 +336,9 @@
 
   // TODO: 
   // 1. Account for a message list with no focusables in view
-  // 2. Hide focus outline on message list when initial tab or arrow will just forward focus inside
   // 3. Fix issue where message list has both hover and focus states visible 
   // 4. Show tooltip for alt + tab shortcut to make user aware of it if they are navigating via Tab key
-  
+
   var users = ['Todd', 'Hubert', 'Boris', 'Sharanya', 'Jonathan', 'George', 'Kirsyn'];
 
   var messages = [
@@ -628,9 +649,7 @@
       34: true, // Page down
       35: true, // Home
       36: true, // End
-      37: true, // Left
       38: true, // Up
-      39: true, // Right
       40: true  // Down
     }[keyCode];
 
@@ -644,6 +663,11 @@
       return;
     }
 
+    if (isKeyboardNav && !$(target).closest('.MessageList').length) {
+      $('.MessageList').focus().trigger($.Event('keydown', { keyCode: keyCode }));
+      return;      
+    }
+
     if (!(isTabKey && e.altKey)) {
       return;
     }
@@ -651,8 +675,13 @@
     // Allow Alt + Tab to move focus between the top-level containers
     e.preventDefault();
 
-    var targetIsLandmark = $target.is('.FocusableLandmark');
-    var focusableLandmarks = $('.FocusableLandmark').toArray();
+    var targetIsLandmark = $target.is('[data-focusable-landmark]');
+
+    var sortAscending = function(a, b) { 
+      return a.getAttribute('data-focusable-landmark') - b.getAttribute('data-focusable-landmark');
+    };
+
+    var focusableLandmarks = $('[data-focusable-landmark]').toArray().sort(sortAscending);
 
     if (!targetIsLandmark) {
       focusableLandmarks[0].focus();
