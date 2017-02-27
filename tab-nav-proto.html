@@ -1,0 +1,672 @@
+<!doctype html>
+
+<style type="text/css">
+    
+    * {
+      box-sizing: border-box; 
+    } 
+
+    html,
+    body {
+      height: 100%;
+    }
+
+    body {
+      font-family: "Helvetica Neue",Helvetica,"Segoe UI",Tahoma,Arial,sans-serif;
+      font-size: 15px;
+      margin: 0;
+    }
+
+    body[mode=mouse] button:focus,
+    body[mode=mouse] a:focus,
+    body[mode=mouse] div[tabindex] {
+      outline: none;
+    }    
+
+    /* Utils */
+
+    .u-TextOverflowEllipsis {
+      overflow: hidden;
+      white-space: nowrap;
+      text-overflow: ellipsis;
+    }    
+
+    .u-FlexParent {
+      display: flex;
+      align-items: center;
+    }
+
+    .u-flexChildManagedOverflow {
+      min-width: 1px;
+    }    
+
+    .u-FlexChildMaxWidth {
+      flex: 1;
+    }    
+
+
+    /* Common components */
+
+    .IconButton {
+      width: 20px;
+      height: 20px;
+      border: none;
+    }
+
+    .LinkButton  {
+      padding: 0;
+      border: 0;
+      background: transparent;
+      font-family: inherit;
+      font-size: inherit;
+      font-weight: inherit;
+      color: inherit;
+    }
+
+
+    /* Top-level containers */
+
+    .Client {
+      display: flex;
+      flex-direction: column;
+      height: 50px;
+      height: 100%;
+    }
+
+    .Client-header {
+      flex-shrink: 0;
+      flex-basis: 50px;
+    }
+
+    .Client-body {
+      display: flex;
+      flex-grow: 1;
+    }
+
+    .ChannelListContainer {
+      flex-basis: 220px;
+      flex-shrink: 0;
+      background: #303E4D;
+    }
+
+    .MessagePane {
+      display: flex;
+      flex-grow: 1;
+      flex-direction: column;
+      border-top: 1px solid rgba(0, 0, 0, .45);;
+    }
+
+    
+    /* Channel header */
+
+    .ChannelHeader {
+      padding: 10px;
+    }
+
+    .TeamMenu {
+      display: flex;
+      flex-shrink: 0;
+      flex-basis: 220px;
+      height: 100%;
+      padding: 10px;
+      background: #303E4D;
+      color: white;
+      font-size: 18px;
+    }    
+
+    .ChannelName {
+      font-weight: bold;
+      font-size: 18px;
+    }
+
+    .FlexPaneHeader {
+      width: 32%;
+    }
+
+    .SearchInput {
+      flex: 1; 
+    }
+
+    .ChannelActions-button {
+      margin-right: 5px;
+    }
+
+    .FlexPaneHeader-button {
+      margin-left: 5px;
+    }
+
+    .ChannelHeaderInfo-item {
+      display: flex;
+      color: rgba(0, 0, 0, .7);
+      font-size: 14px;
+    }
+
+    .ChannelHeaderInfo-item:not(:first-child):before {
+      content: '|';
+      margin-left: 5px;
+      margin-right: 5px;
+    }
+
+
+    /* Channel list */
+
+    .ChannelListContainer {
+      padding: 10px;
+    }
+
+    .ChannelList {
+      padding: 0; 
+      margin: 0; 
+    }
+
+    .ChannelList-item {
+      list-style: none;
+      line-height: 1.3;
+    }
+
+    .ChannelList-item a {
+      color: white;
+      text-decoration: none;
+    }
+
+    
+    /* Message list */
+
+    .MessageList {
+      flex-grow: 1;
+      padding: 10px;
+      overflow-y: scroll;
+    }
+
+    .MessageInputContainer {
+      padding: 10px;
+    }
+
+    .MessageInputContainer-textarea {
+      width: 100%;
+    }   
+
+    .Message {
+      margin: 10px 0;
+      padding-left: 70px;
+      position: relative;
+    }
+
+    .Message-header {
+      display: flex;
+      align-items: flex-start;
+    }
+
+    .Message-timestamp {
+      margin: 0 5px;
+      text-decoration: none;
+      color: #999;
+    }
+
+    .Message-text {
+      margin: 5px 0;
+    }
+
+    .Message-actions {
+      position: absolute;
+      display: none;
+      right: 0;
+      top: -5px;
+    }    
+
+    .Message:hover,
+    .Message--hasFocus {
+      background: rgba(0,0,0,.10);
+    }
+
+    .Message:hover .Message-actions,
+    .Message--hasFocus .Message-actions{
+      display: flex;
+    }
+
+    .MessageActionButton {
+      border-radius: 3px;
+      border: solid 1px #666;
+    }
+
+    .User {
+      display: flex;
+      align-items: flex-start;
+    }
+
+    .User-name {
+      font-weight: bold;
+      color: black;
+      text-decoration: none;
+    }
+
+    .User-avatar {
+      position: absolute;
+      margin-left: -40px;
+      margin-right: 10px;
+      width: 30px;
+      height: 30px;
+      border: 1px solid #666;
+      background: rgba(0, 0, 0, .1);
+      border-radius: 3px;
+    }
+
+</style>
+
+<div class="Client">
+
+  <div class="Client-header u-FlexParent FocusableLandmark" tabindex="-1">
+    <div class="TeamMenu">
+        <button type="button" class="LinkButton">Slack Corp</button>
+    </div>
+    <div class="ChannelHeader u-FlexParent u-FlexChildMaxWidth">
+      <div class="MessagesHeader u-FlexChildMaxWidth u-FlexParent u-flexChildManagedOverflow">
+        <div class="ChannelTitle u-FlexChildMaxWidth u-flexChildManagedOverflow">
+          <div class="ChannelName u-flexChildManagedOverflow">
+              <button type="button" class="LinkButton u-TextOverflowEllipsis">#feat-a11y-keyboard</button>
+          </div>
+          <div class="ChannelHeaderInfo u-FlexParent u-flexChildManagedOverflow ">
+            <div class="ChannelHeaderInfo-item u-flexChildManagedOverflow">
+              <button type="button" class="LinkButton u-TextOverflowEllipsis">10 Members</button>
+            </div>
+            <div class="ChannelHeaderInfo-item u-flexChildManagedOverflow">
+              <button type="button" class="LinkButton u-TextOverflowEllipsis">1 Pinned item</button>
+            </div>
+            <div class="ChannelHeaderInfo-item u-flexChildManagedOverflow">
+              <div tabindex="0" class="u-flexChildManagedOverflow">
+                <div class="u-TextOverflowEllipsis">The channel topic text.</div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="ChannelActions u-FlexParent">
+          <button type="button" class="IconButton ChannelActions-button">1</button>
+          <button type="button" class="IconButton ChannelActions-button">2</button>
+          <button type="button" class="IconButton ChannelActions-button">3</button>
+        </div>
+      </div>
+      <div class="FlexPaneHeader u-FlexParent">
+        <input type="text" placeholder="Search" class="SearchInput">
+        <button type="button" class="IconButton FlexPaneHeader-button">1</button>
+        <button type="button" class="IconButton FlexPaneHeader-button">2</button>
+        <button type="button" class="IconButton FlexPaneHeader-button">3</button>
+      </div>
+    </div>
+  </div>
+  
+  <div class="Client-body">
+    <div class="ChannelListContainer FocusableLandmark" tabindex="-1">
+      <ul class="ChannelList"></ul>
+    </div>
+    <div class="MessagePane FocusableLandmark" tabindex="-1">
+      <div class="MessageList" tabindex="0"></div>
+      <div class="MessageInputContainer">
+        <textarea class="MessageInputContainer-textarea FocusableLandmark"></textarea>
+      </div>    
+    </div>
+  </div>
+
+</div>
+
+<script src="https://cdn.jsdelivr.net/lodash/4.17.4/lodash.min.js"></script>
+<script src="https://code.jquery.com/jquery-2.2.4.min.js"></script>
+<script type="text/javascript">
+
+  // TODO: it could be the case that there is nothing in view, like a really long DM
+  // 1. Account for a message list with no focusables in view
+  // 2. Hide focus outline on message list when initial tab or arrow will just forward focus inside
+  // 3. Fix issue where message list has both hover and focus states visible 
+  // 4. Show tooltip for alt + tab shortcut to make user aware of it if they are navigating via Tab key
+  
+  var users = ['Todd', 'Hubert', 'Boris', 'Sharanya', 'Jonathan', 'George', 'Kirsyn'];
+
+  var messages = [
+    'Tacos single-origin coffee fashion axe biodiesel, scenester fam skateboard minim ex keffiyeh nisi beard.',
+    'Raw denim affogato vice banh mi af pinterest wayfarers. Flexitarian pork belly 3 wolf moon tattooed. Butcher fam tousled, pitchfork sriracha affogato mustache kogi. Butcher chicharrones hot chicken, neutra man braid pork belly cliche.',
+    'Air plant meggings XOXO trust fund, chartreuse shabby chic migas typewriter. Kickstarter brunch seitan sustainable gochujang, bicycle rights tote bag vinyl raclette godard succulents blue bottle chicharrones salvia PBR&B. Cardigan mixtape hexagon, kombucha truffaut prism PBR&B blue bottle fashion axe you probably have not heard of them pabst art party cornhole wolf disrupt.',
+    'Seitan umami helvetica, cardigan heirloom everyday carry biodiesel mlkshk brunch cold-pressed typewriter williamsburg salvia knausgaard. Fam hella man bun flannel. Viral locavore fashion axe, fingerstache cray occupy slow-carb chia put a bird on it semiotics. <a href="#"">Thundercats</a> echo park fap put a bird on it food truck. Kogi everyday carry austin DIY church-key. Next level everyday carry glossier, copper mug polaroid photo booth YOLO. Truffaut brooklyn kinfolk, chillwave godard taxidermy master cleanse ethical ugh YOLO pinterest prism.',
+    'Accessibility all the things!!!',
+    'YOLO'
+  ];
+
+  var mkRandomizer = function(min, max) {
+    var last;
+    min = Math.ceil(min);
+    max = Math.floor(max);
+
+    var getRandomInt = function() {
+        var rnd = Math.floor(Math.random() * (max - min)) + min;
+
+        if (typeof last !== 'undefined' && last === rnd) {
+          last = rnd;
+          return getRandomInt();
+        }
+
+        last = rnd;
+        return rnd;
+    };
+
+    return getRandomInt;
+  };
+
+  var getRandomUser = mkRandomizer(0, users.length -1);
+  var getRandomMessage = mkRandomizer(0, messages.length -1);
+
+  var channels = Array(30).fill('').map(function(val,index) {
+    return `<li class="ChannelList-item"><a href="#">Channel ${index}</a></li>`;
+  }).join('');
+
+  $('.ChannelList').html(channels);
+
+  var messages = Array(100).fill('').map(function(val, index) {
+    var username = users[getRandomUser()];
+    var message = messages[getRandomMessage()];
+
+    var now = new Date();
+    var hours = now.getHours();
+    var hour = hours > 12 ? hours - 12 : hours;
+    var timestamp = hour + ':' + now.getMinutes() + (hours >= 12 ? 'pm' : 'am');
+
+    return `<div class="Message" tabindex="-1">
+      
+      <div class="Message-header">
+        <div class="User">
+          <div class="User-avatar"></div>
+          <a class="User-name" href="#">${username}</a>
+        </div>
+        <a class="Message-timestamp" href="#">${timestamp}</a>
+      </div>
+
+      <div class="Message-text">${message}</div>
+      
+      <div class="Message-actions">
+        <button type="button" class="MessageActionButton IconButton">1</button>
+        <button type="button" class="MessageActionButton IconButton">2</button>
+        <button type="button" class="MessageActionButton IconButton">3</button>
+      </div>
+
+    </div>`;
+  }).join('');
+
+  $('.MessageList').html(messages);
+
+  $('.MessageList').scrollTop($('.MessageList')[0].scrollHeight - $('.MessageList').height());
+
+  var getLastMessageInView = function(x, y) {
+    var el = document.elementFromPoint(x, y);
+    var $message = $(el).closest('.Message');
+
+    return $message.length ? $message : getLastMessageInView(x, (y - 10));
+  };
+
+  var getPreviousMessage = function($message) {
+      var $previousMessage = $message.prev('.Message');
+
+      return $previousMessage.length ?
+            $previousMessage :
+            $message.closest('.DayContainer').prev('.DayContainer').find('.Message:last-child');
+  };
+
+  var getMessagesInView = function() {
+    var messageGutter = 90;
+    var x = $('.MessageList').offset().left + messageGutter;
+    var y = $('.MessageList').offset().top + ($('.MessageList').height() + 20);
+    var $lastInView = getLastMessageInView(x, y);
+
+    function getPrevious(messages) {
+      var $message = messages[messages.length - 1];
+      var y = $message.offset().top;
+
+      // If the top of the current message is within 10px of maxY, return the collection
+      if (y >= 0 && y <= 10) {
+        return messages;
+      }
+
+      // If the top of the message is partially or completely, outside, then return the collection 
+      if (y < 0) {
+        return messages;  
+      }
+
+      var $previous = getPreviousMessage($message);
+      if (!$previous.length) {
+        return messages;
+      }
+
+      return getPrevious(messages.concat($previous));
+    }
+
+    return getPrevious([$lastInView]);
+  };
+
+  var inView = function(element) {
+    var elTop = $(element).offset().top;
+    var messageListTop = $('.MessageList').offset().top;
+
+    return elTop >= messageListTop && elTop <= messageListTop + $('.MessageList').height();
+  };
+
+  var getFirstFocusableInView = function(messagesInView) {
+    return messagesInView.reduce(function(acc, $message) {
+      if (acc) {
+        return acc;
+      }
+
+      var hasFocus = $message.hasClass('Message--hasFocus');
+      !hasFocus && $message.addClass('Message--hasFocus');
+      
+      var filerFn = function(i, element) { return inView(element); };
+
+      var filterResult = $message.find('a,button').filter(filerFn).last();
+      
+      !hasFocus && $message.removeClass('Message--hasFocus');
+
+      if (filterResult[0]) {
+        return filterResult;
+      }
+    }, null);
+  };
+
+  var getLastFocusableInView = function(messagesInView) {
+    return messagesInView.reduceRight(function(acc, $message) {
+      if (acc) {
+        return acc;
+      }
+
+      var hasFocus = $message.hasClass('Message--hasFocus');
+      !hasFocus && $message.addClass('Message--hasFocus');
+
+      var filerFn = function(i, element) { return inView(element); };
+
+      var filterResult = $message.find('a,button').filter(filerFn).first();
+      
+      !hasFocus && $message.removeClass('Message--hasFocus');
+
+      if (filterResult[0]) {
+        return filterResult;
+      }
+    }, null);  
+  };
+
+  var updateFirstAndLastFocusbles = function() {
+    var activeElement = document.activeElement;
+    if (!($(activeElement).is('.MessageList') || $('.MessageList')[0].contains(activeElement))) {
+      return;
+    }
+
+    $('.MessageList .FirstFocusableInView').removeClass('FirstFocusableInView');
+    $('.MessageList .LastFocusableInView').removeClass('LastFocusableInView');
+
+    var messagesInView = getMessagesInView();
+    var $lastFocusable = getFirstFocusableInView(messagesInView);
+    var $firstFocusable = getLastFocusableInView(messagesInView);
+
+    $lastFocusable.addClass('LastFocusableInView');
+    $firstFocusable.addClass('FirstFocusableInView');
+  };
+
+  $('.MessageList').on('scroll', _.debounce(updateFirstAndLastFocusbles, 50));
+  $(window).on('resize', _.debounce(updateFirstAndLastFocusbles, 50));
+
+  $('.MessageList').on('keyup', function(e) {
+    if (e.keyCode != 9) {
+      return;
+    }
+
+    var $target = $(e.target);
+    var $messageList = $(this);
+    var isShiftKey = e.shiftKey;
+
+    if (!isShiftKey && $target.is('.MessageList')) {
+      updateFirstAndLastFocusbles(e);
+      $messageList.find('.FirstFocusableInView').focus();
+    }
+  });
+
+  $('.MessageList').on('keydown', function(e) {
+    var keyCode = e.keyCode;
+    var isTab = keyCode == 9;
+    var $target = $(e.target);
+    var $messageList = $(this);
+    var isShiftKey = e.shiftKey;
+
+    var method = {
+      38: 'prev',
+      40: 'next'
+    }[keyCode];
+
+    if ($target.is('.MessageList') && method) {
+      updateFirstAndLastFocusbles();
+    }
+
+    if (!$target.is('.MessageList') && !inView(e.target)) {
+      e.preventDefault();
+      $messageList.find('.Message--hasFocus').removeClass('Message--hasFocus');
+      updateFirstAndLastFocusbles();
+
+      if (isTab) {
+        $messageList.find('.FirstFocusableInView').focus();
+        return;
+      }
+    }
+
+    if (isTab && !isShiftKey && $target.is('.LastFocusableInView')) {
+      e.preventDefault();
+      $('.MessageInputContainer-textarea').focus();
+      return;
+    }
+
+    if (isTab && isShiftKey && $target.is('.FirstFocusableInView')) {
+      e.preventDefault();
+      $('.ChannelList-item a:last-child').focus(); 
+      return;
+    }
+
+    var $focused = $messageList.find('.Message--hasFocus');
+    if (method && !$focused.length) {
+      e.preventDefault();
+      $messageList.find('.FirstFocusableInView').closest('.Message').focus();
+      return;
+    }
+
+    var $next = method && $focused[method] && $focused[method]('.Message');
+    if ($next && $next.length) {
+      e.preventDefault();
+      $next.focus(); 
+    }     
+  });  
+
+  $('.MessageInputContainer-textarea').on('keydown', function(e) {
+    if (e.keyCode != 9) {
+      return;
+    }
+
+    var $target = $(e.target);
+    var $messageList = $(this);
+    var isShiftKey = e.shiftKey;
+
+    var focusable = $('.MessageList .LastFocusableInView')[0] || $('.MessageList')[0]; 
+
+    if (isShiftKey && focusable) {
+      focusable.focus();
+    }
+  });
+
+
+  $('.MessageList').on('focus', '.Message', function(e) {
+    var target = e.target;
+    var $focusedMessage = $('.MessageList .Message--hasFocus');
+    var focusedMessage = $focusedMessage.get(0);
+
+    if (focusedMessage && focusedMessage.contains(target) || $(target).is('.Message--hasFocus')) {
+      return;
+    }
+ 
+    // Remove in case there was no previous blur
+    $focusedMessage.removeClass('Message--hasFocus');
+    $(target).closest('.Message').addClass('Message--hasFocus');
+  });
+
+  $(document).on('focusin', function(e) {
+    var target = e.target;
+    var $focusedMessage = $('.MessageList .Message--hasFocus');
+    var focusedMessage = $focusedMessage.get(0);
+
+    if (focusedMessage && !focusedMessage.contains(target)) {
+      $focusedMessage.removeClass('Message--hasFocus');
+    }
+  });
+
+  $(document).on('keydown', function(e) {
+    var keyCode = e.keyCode;
+    var target = e.target;
+    var $target = $(target);    
+    var isTabKey = e.keyCode == 9;
+
+    var isKeyboardNav = {
+      32: true, // space
+      33: true, // Page Up
+      34: true, // Page down
+      35: true, // Home
+      36: true, // End
+      37: true, // Left
+      38: true, // Up
+      39: true, // Right
+      40: true  // Down
+    }[keyCode];
+
+    if (isTabKey || (isKeyboardNav && !$target.is('textarea'))) {
+      document.body.setAttribute('mode', 'keyboard'); 
+    }
+
+    // Forward up & down arrow keys to the message list
+    if ((keyCode == 38 || keyCode == 40) && !$(target).closest('.MessageList').length) {
+      $('.MessageList').focus().trigger($.Event('keydown', { keyCode: keyCode }));
+      return;
+    }
+
+    if (!(isTabKey && e.altKey)) {
+      return;
+    }
+
+    // Allow Alt + Tab to move focus between the top-level containers
+    e.preventDefault();
+
+    var targetIsLandmark = $target.is('.FocusableLandmark');
+    var focusableLandmarks = $('.FocusableLandmark').toArray();
+
+    if (!targetIsLandmark) {
+      focusableLandmarks[0].focus();
+      return;
+    }
+    
+    var index = focusableLandmarks.indexOf(target);
+    var nextIndex = (index == focusableLandmarks.length - 1) ? 0 : index + 1;    
+
+    focusableLandmarks[nextIndex].focus();
+  });
+
+  $(document).on('mousedown', function(e) {
+    document.body.setAttribute('mode', 'mouse');
+  });
+
+</script>
