@@ -585,7 +585,7 @@
     var $focused = $messageList.find('.Message--hasFocus');
     if (method && !$focused.length) {
       e.preventDefault();
-      $messageList.find('.FirstFocusableInView').closest('.Message').focus();
+      $messageList.find((method == 'next' ? '.LastFocusableInView' : '.FirstFocusableInView')).closest('.Message').focus();
       return;
     }
 
