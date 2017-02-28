@@ -388,7 +388,6 @@
     var timestamp = hour + ':' + now.getMinutes() + (hours >= 12 ? 'pm' : 'am');
 
     return `<div class="Message" tabindex="-1">
-      
       <div class="Message-header">
         <div class="User">
           <div class="User-avatar"></div>
@@ -396,15 +395,12 @@
         </div>
         <a class="Message-timestamp" href="#">${timestamp}</a>
       </div>
-
-      <div class="Message-text">${message}</div>
-      
       <div class="Message-actions">
         <button type="button" class="MessageActionButton IconButton">1</button>
         <button type="button" class="MessageActionButton IconButton">2</button>
         <button type="button" class="MessageActionButton IconButton">3</button>
       </div>
-
+      <div class="Message-text">${message}</div>
     </div>`;
   }).join('');
 
