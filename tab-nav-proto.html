@@ -29,6 +29,10 @@
       box-shadow: inset 0 0 6px #005E99;
     }
 
+    body[mode=mouse] div[data-focusable-landmark]:focus {
+      box-shadow: none;
+    }
+
     /* Utils */
 
     .u-TextOverflowEllipsis {
@@ -604,6 +608,13 @@
 
     if (isShiftKey && focusable) {
       focusable.focus();
+    }
+  });
+
+  $('.MessageList').on('mousedown', '.Message', function(e) {
+    var target = e.target;
+    if (!$(target).is('a')) {
+      e.preventDefault();
     }
   });
 
