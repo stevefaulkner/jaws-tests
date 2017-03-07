@@ -199,9 +199,9 @@
     
     /* Message list */
 
-    .MessageList {
+    .MessageListContainer {
       flex-grow: 1;
-      padding: 10px;
+      padding: 10px;      
       overflow-y: scroll;
     }
 
@@ -331,8 +331,10 @@
       </div>
     </div>
 
-    <div class="MessagePane" data-focusable-landmark="3" tabindex="-1">
-      <div class="MessageList" tabindex="0"></div>
+    <div class="MessagePane">
+      <div class="MessageListContainer" data-focusable-landmark="3" tabindex="-1">
+        <div class="MessageList" tabindex="0"></div>
+      </div>
       <div class="MessageInputContainer">
         <textarea class="MessageInputContainer-textarea" data-focusable-landmark="0" tabindex="1"></textarea>
       </div>    
