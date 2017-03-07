@@ -20,17 +20,26 @@
     body[mode=mouse] button:focus,
     body[mode=mouse] a:focus,
     body[mode=mouse] div[tabindex] {
-      outline: none;
-      box-shadow: none;
+      outline: none; 
     }    
 
     div[data-focusable-landmark]:focus {
+      position: relative;
       outline: none;
-      box-shadow: inset 0 0 6px #005E99;
     }
 
-    body[mode=mouse] div[data-focusable-landmark]:focus {
-      box-shadow: none;
+    div[data-focusable-landmark]:focus:after {
+      content: '';
+      position: absolute;
+      box-sizing: border-box; 
+      top: 2px;
+      left: 2px;
+      bottom: 2px;
+      right: 2px;
+      border-width: 2px;
+      border-style: solid;
+      border-color: #2D9EE0;
+      border-radius: 3px;
     }
 
     /* Utils */
