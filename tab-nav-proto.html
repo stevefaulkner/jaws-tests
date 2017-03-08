@@ -19,16 +19,23 @@
 
     body[mode=mouse] button:focus,
     body[mode=mouse] a:focus,
-    body[mode=mouse] div[tabindex] {
+    body[mode=mouse] div[tabindex]:focus {
       outline: none; 
-    }    
+    }
 
-    div[data-focusable-landmark]:focus {
+    body[mode=keyboard] button:focus,
+    body[mode=keyboard] a:focus,
+    body[mode=keyboard] div[tabindex]:focus {
+      outline: 3px solid #2D9EE0; 
+    }
+
+
+    body[mode=keyboard] div[data-focusable-landmark]:focus {
       position: relative;
       outline: none;
     }
 
-    div[data-focusable-landmark]:focus:after {
+    body[mode=keyboard] div[data-focusable-landmark]:focus:after {
       content: '';
       position: absolute;
       box-sizing: border-box; 
@@ -39,6 +46,19 @@
       border-width: 3px;
       border-style: solid;
       border-color: #2D9EE0;
+    }
+
+    body[mode=keyboard] div[data-focusable-landmark].MessagePane:focus:after {
+      bottom: 50px;
+    }    
+
+    body[mode=keyboard] div[data-focusable-landmark].ChannelListContainer:focus:after {
+      border-color: white;
+    }
+
+    body[mode=keyboard] .ChannelListContainer a:focus,
+    body[mode=keyboard] .ChannelListContainer button:focus {
+      outline-color: white;
     }
 
     /* Utils */
@@ -108,9 +128,7 @@
       background: #303E4D;
     }
 
-    div[data-focusable-landmark].ChannelListContainer:focus {
-      box-shadow: inset 0 0 6px white;
-    }
+
 
     .ChannelListContainer a:focus {
       outline-color: white;
@@ -199,9 +217,9 @@
     
     /* Message list */
 
-    .MessageListContainer {
+    .MessageList {
       flex-grow: 1;
-      padding: 10px;      
+      padding: 10px;
       overflow-y: scroll;
     }
 
@@ -331,10 +349,8 @@
       </div>
     </div>
 
-    <div class="MessagePane">
-      <div class="MessageListContainer" data-focusable-landmark="3" tabindex="-1">
-        <div class="MessageList" tabindex="0"></div>
-      </div>
+    <div class="MessagePane" data-focusable-landmark="3" tabindex="-1">
+      <div class="MessageList" tabindex="0"></div>
       <div class="MessageInputContainer">
         <textarea class="MessageInputContainer-textarea" data-focusable-landmark="0" tabindex="1"></textarea>
       </div>    
