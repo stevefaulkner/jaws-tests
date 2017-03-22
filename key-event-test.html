@@ -1,0 +1,92 @@
+<style type="text/css">
+  
+  #key-info {
+    text-align: center;
+  }
+
+  select {
+    font-size: inherit;
+  }
+
+  #keyboard-shortcut {
+    font-size: 72px;
+  }
+
+  #status {
+    color: green;
+  }
+
+  #event-info, 
+  #status {
+    font-size: 32px;
+  }
+
+</style>
+
+<div id="key-info">
+  <label>
+    Language 
+    <select id="langs">
+      <option value="en">English</option>
+      <option value="fr">French</option>
+      <option value="jp">Japanese</option>
+      <option value="de">German</option>
+      <option value="es">Spanish</option>
+    </select>
+  </label>
+  <div>
+    <div id="keyboard-shortcut">
+      Shortcut: <strong>ctrl</strong> + <strong><span id="key"></span></strong>
+    </div>
+    <div id="event-info"><strong>Event Info:</strong> <span id="info"></span></div>
+    <div id="status"></div>
+  </div>
+</div>
+
+<script type="text/javascript">
+
+  var map = {
+    'en': '`',
+    'fr': '@',
+    'jp': '!',
+    'de': '^',
+    'es': '°'
+  };  
+
+  var langs = document.getElementById('langs');
+  showShortcut();
+
+  function showShortcut() {
+    document.getElementById('key').innerHTML = map[langs.value];
+  }
+
+  langs.addEventListener('change', showShortcut, true);
+
+  window.addEventListener('keydown', function(e) {
+    var info = 'key: ' + e.key + ', keyCode: ' + e.keyCode + ', ctrlKey: ' + e.ctrlKey;
+
+
+    document.getElementById('status').innerHTML = '';
+    document.getElementById('info').innerHTML = info;
+  });
+
+  window.addEventListener('keypress', function(e) {
+    var langs = document.getElementById('langs');
+    var typedChar = String.fromCharCode(e.charCode);
+
+    console.log('typedChar', typedChar);
+
+    var expected = map[langs.value];  //'`';
+
+    console.log('expected', expected);
+
+    var shortcutPressed = e.ctrlKey && typedChar === expected;
+
+    if (!shortcutPressed) {
+      return;
+    }
+
+    document.getElementById('status').innerHTML = 'Success!';
+  }, false);
+
+</script>
