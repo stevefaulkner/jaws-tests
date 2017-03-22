@@ -26,7 +26,7 @@
     body[mode=keyboard] button:focus,
     body[mode=keyboard] a:focus,
     body[mode=keyboard] div[tabindex]:focus {
-      outline: 3px solid #005E99; 
+      outline: 4px auto #1543D9; 
     }
 
 
@@ -43,9 +43,10 @@
       left: 2px;
       bottom: 2px;
       right: 2px;
+      border-radius: 3px;
       border-width: 3px;
       border-style: solid;
-      border-color: #2D9EE0;
+      border-color: #1543D9;
     }
 
     body[mode=keyboard] div[data-focusable-landmark].MessagePane:focus:after {
@@ -223,7 +224,7 @@
       overflow-y: scroll;
     }
 
-    .MessageList:focus {
+    body[mode=keyboard] .MessageList[tabindex]:focus {
       outline: none;
     }
 
@@ -276,6 +277,10 @@
     .MessageActionButton {
       border-radius: 3px;
       border: solid 1px #666;
+    }
+
+    .MessageActionButton:focus {
+      z-index: 1;
     }
 
     .User {
@@ -603,7 +608,7 @@
 
     if (isTab && isShiftKey && $target.is('.FirstFocusableInView')) {
       e.preventDefault();
-      $('.ChannelList-item a:last-child').focus(); 
+      $('.FlexPaneHeader button:last-child').focus(); 
       return;
     }
 
@@ -673,6 +678,7 @@
     var target = e.target;
     var $target = $(target);    
     var isTabKey = e.keyCode == 9;
+    var isTidleKey = e.keyCode == 192;
 
     var isKeyboardNav = {
       32: true, // space
@@ -684,7 +690,7 @@
       40: true  // Down
     }[keyCode];
 
-    if (isTabKey || (isKeyboardNav && !$target.is('textarea'))) {
+    if (isTabKey || isTidleKey || (isKeyboardNav && !$target.is('textarea'))) {
       document.body.setAttribute('mode', 'keyboard'); 
     }
 
@@ -699,7 +705,7 @@
       return;      
     }
 
-    if (!(isTabKey && e.altKey)) {
+    if (!(isTidleKey && e.ctrlKey)) {
       return;
     }
 
