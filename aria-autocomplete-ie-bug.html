@@ -1,0 +1,90 @@
+<!doctype html>
+
+<style type="text/css">
+	
+	li[aria-selected] {
+		background-color: blue; 
+	}	
+
+</style>
+
+<input autocomplete="off" id="query" type="text" role="combobox" aria-autocomplete="list" aria-expanded="true" aria-owns="resultslist">
+<ul id="resultslist" role="listbox" tabindex="-1">
+	<li role="option" tabindex="-1" id="item-1">
+		<span><span title="offline"></span> <span><strong>Todd</strong> @kloots</span></span>
+	</li>
+	<li role="option" tabindex="-1" id="item-2">
+		<span><span title="online"></span> <span><strong>Trevor</strong> @trevor</span></span>
+	</li>
+	<li role="option" tabindex="-1" id="item-3">
+		<span><span title="offline"></span> <span><strong>Ross</strong> @ross</span></span>
+	</li>
+	<li role="option" tabindex="-1" id="item-4">
+		<span><span title="away"></span> <span><strong>Berryl</strong> @berryl</span></span>
+	</li>
+	<li role="option" tabindex="-1" id="item-5">
+		<span><span title="away"></span> <span><strong>Wayne</strong> @wayne</span></span>
+	</li>				
+</ul>
+
+<script type="text/javascript">
+	(function() {
+
+		var selectItem = function(node) {
+			var query = document.getElementById('query');
+			var resultsList = document.getElementById('resultslist');
+			var selected = resultsList.querySelector('li[aria-selected]');
+			if (selected) {
+				selected.removeAttribute('aria-selected');
+			}
+			
+			node.setAttribute('aria-selected', 'true');
+			query.setAttribute('aria-activedescendant', node.id);
+		};
+
+		var getInitialSelection = function(resultsList, keyCode) {
+			if (keyCode === 38) {
+				return resultsList.lastElementChild;
+			}
+
+			if (keyCode === 40) {
+				return resultsList.firstElementChild;
+			}
+		};
+
+		var getNextSelection = function(current, keyCode) {
+			var next = current.nextElementSibling;
+			var prev = current.previousElementSibling;
+
+			if (keyCode === 38) {
+				return prev ? prev : current.parentNode.lastElementChild;
+			}
+
+			if (keyCode === 40) {
+				return next ? next : current.parentNode.firstElementChild;
+			}
+		};
+
+		var query = document.getElementById('query');
+
+		query.addEventListener('keydown', function(e) {
+			var resultsList = document.getElementById('resultslist');
+			var selected = resultsList.querySelector('li[aria-selected]');
+			var keyCode = e.keyCode;
+
+			if (!(keyCode === 38 || keyCode === 40)) {
+				return;
+			}
+
+			e.preventDefault();
+
+			console.log(selected);
+
+			var next = selected ? getNextSelection(selected, keyCode) : getInitialSelection(resultsList, keyCode);
+			if (next) {
+				selectItem(next);
+			}
+		}, false);	
+
+	})();
+</script>
