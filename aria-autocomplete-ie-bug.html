@@ -8,7 +8,7 @@
 
 </style>
 
-<input autocomplete="off" id="query" type="text" role="combobox" aria-autocomplete="list" aria-expanded="true" aria-owns="resultslist">
+<input autocomplete="off" id="query" type="text" role="combobox" aria-haspopup="true" aria-autocomplete="list" aria-expanded="true" aria-owns="resultslist">
 <ul id="resultslist" role="listbox" tabindex="-1">
 	<li role="option" tabindex="-1" id="item-1">
 		<span><span title="offline"></span> <span><strong>Todd</strong> @kloots</span></span>
@@ -37,9 +37,13 @@
 			if (selected) {
 				selected.removeAttribute('aria-selected');
 			}
-			
-			node.setAttribute('aria-selected', 'true');
-			query.setAttribute('aria-activedescendant', node.id);
+
+			// required for safari
+			setTimeout(function() {
+				query.setAttribute('aria-activedescendant', node.id);
+				// required by Safari
+				node.setAttribute('aria-selected', 'true');
+			}, 0);
 		};
 
 		var getInitialSelection = function(resultsList, keyCode) {
