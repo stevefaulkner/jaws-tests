@@ -1,0 +1,87 @@
+<!doctype html>
+
+<style type="text/css">
+	
+	div.selected {
+		background-color: blue; 
+	}	
+
+</style>
+
+<div id="resultslist" role="menu" tabindex="0">
+	<div role="menuitem" tabindex="-1" id="item-1">
+		<span><strong>Todd</strong> @kloots</span></span>
+	</div>
+	<div role="menuitem" tabindex="-1" id="item-2">
+		<span><strong>Trevor</strong> @trevor</span></span>
+	</div>
+	<div role="menuitem" tabindex="-1" id="item-3">
+		<span><strong>Ross</strong> @ross</span></span>
+	</div>
+	<div role="menuitem" tabindex="-1" id="item-4">
+		<span><strong>Berryl</strong> @berryl</span></span>
+	</div>
+	<div role="menuitem" tabindex="-1" id="item-5">
+		<span><strong>Wayne</strong> @wayne</span></span>
+	</div>				
+</div	>
+
+<script type="text/javascript">
+	(function() {
+
+		var selectItem = function(node) {
+			var resultsList = document.getElementById('resultslist');
+			var selected = resultsList.querySelector('.selected');
+			if (selected) {
+				selected.classList.remove('selected');
+			}
+
+			resultsList.setAttribute('aria-activedescendant', node.id);
+			node.classList.add('selected');
+		};
+
+		var getInitialSelection = function(resultsList, keyCode) {
+			if (keyCode === 38) {
+				return resultsList.lastElementChild;
+			}
+
+			if (keyCode === 40) {
+				return resultsList.firstElementChild;
+			}
+		};
+
+		var getNextSelection = function(current, keyCode) {
+			var next = current.nextElementSibling;
+			var prev = current.previousElementSibling;
+
+			if (keyCode === 38) {
+				return prev ? prev : current.parentNode.lastElementChild;
+			}
+
+			if (keyCode === 40) {
+				return next ? next : current.parentNode.firstElementChild;
+			}
+		};
+
+		var resultsList = document.getElementById('resultslist');
+		resultsList.focus();
+		resultsList.addEventListener('keydown', function(e) {
+			
+			var selected = resultsList.querySelector('.selected');
+			var keyCode = e.keyCode;
+
+			if (!(keyCode === 38 || keyCode === 40)) {
+				return;
+			}
+
+			e.preventDefault();
+
+			var next = selected ? getNextSelection(selected, keyCode) : getInitialSelection(resultsList, keyCode);
+
+			if (next) {
+				selectItem(next);
+			}
+		}, false);	
+
+	})();
+</script>
