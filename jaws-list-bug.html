@@ -1,0 +1,83 @@
+<!doctype html>
+
+<style type="text/css">
+	.selected {
+		background-color: blue; 
+	}
+</style>
+
+<div id="resultslist" role="list" tabindex="0" aria-label="Slack Employees">
+	<div role="listitem" tabindex="-1" aria-label="Todd Kloots">
+		<strong>Todd</strong> @kloots
+	</div>
+	<div role="listitem" tabindex="-1" aria-label="Trevor Hartsel">
+		<strong>Trevor</strong> @trevor
+	</div>
+	<div role="listitem" tabindex="-1" aria-label="Ross Harms">
+		<strong>Ross</strong> @ross
+	</div>
+	<div role="listitem" tabindex="-1" aria-label="Berryl Wang">
+		<strong>Berryl</strong> @berryl
+	</div>
+	<div role="listitem" tabindex="-1" aria-label="Wang Fang">
+		<strong>Wayne</strong> @wayne
+	</div>				
+</div>
+
+<script type="text/javascript">
+	(function() {
+
+		var selectItem = function(node) {
+			var resultsList = document.getElementById('resultslist');
+			var selected = resultsList.querySelector('.selected');
+			if (selected) {
+				selected.classList.remove('selected');
+			}
+
+			node.classList.add('selected');
+			node.focus();
+		};
+
+		var getInitialSelection = function(resultsList, keyCode) {
+			if (keyCode === 38) {
+				return resultsList.lastElementChild;
+			}
+
+			if (keyCode === 40) {
+				return resultsList.firstElementChild;
+			}
+		};
+
+		var getNextSelection = function(current, keyCode) {
+			var next = current.nextElementSibling;
+			var prev = current.previousElementSibling;
+
+			if (keyCode === 38) {
+				return prev ? prev : current.parentNode.lastElementChild;
+			}
+
+			if (keyCode === 40) {
+				return next ? next : current.parentNode.firstElementChild;
+			}
+		};
+
+
+		document.getElementById('resultslist').addEventListener('keydown', function(e) {
+			var resultsList = e.currentTarget;
+			var selected = resultsList.querySelector('.selected');
+			var keyCode = e.keyCode;
+
+			if (!(keyCode === 38 || keyCode === 40)) {
+				return;
+			}
+
+			e.preventDefault();
+
+			var next = selected ? getNextSelection(selected, keyCode) : getInitialSelection(resultsList, keyCode);
+			if (next) {
+				selectItem(next);
+			}
+		}, false);	
+
+	})();
+</script>
