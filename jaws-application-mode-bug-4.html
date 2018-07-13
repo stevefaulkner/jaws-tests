@@ -1,0 +1,29 @@
+<!doctype html>
+
+<html>
+	<head>
+		<title>JAWS ARIA application mode example #2</title>
+	</head>
+	<body>
+		<h2>JAWS ARIA application mode example #2</h2>
+
+		<h3>Issue Summary</h3>
+		<p>When moving focus into an ARIA application context JAWS doesn't play a sound to indicate the switch into to forms mode.</p>
+
+		<h3>Repro Steps</h3>
+		<ol>
+			<li><strong>Press F6</strong> to move focus to the first ARIA listitem instance on this page.</li>
+			<li>Notice JAWS does not play a sound to indicate forms is enabled even though form mode has been enabled.</li>
+		</ol>
+
+		<div role="application">
+			<p>The following button is inside the application context</p>
+			<button type="button">Button 1</button>
+			<div role="document">
+				<p>The following button is inside the document context</p>
+				<button type="button">Button 2</button>
+			</div>
+		</div>
+
+	</body>
+</html>

@@ -36,7 +36,7 @@
   </label>
   <div>
     <div id="keyboard-shortcut">
-      Shortcut: <strong>ctrl</strong> + <strong><span id="key"></span></strong>
+      Shortcut: <strong>ctrl</strong> + <strong>shift</strong> + <strong><span id="key"></span></strong>
     </div>
     <div id="event-info"><strong>Event Info:</strong> <span id="info"></span></div>
     <div id="status"></div>
@@ -48,10 +48,13 @@
   var map = {
     'en': '`',
     'fr': '@',
-    'jp': '!',
-    'de': '^',
+    'jp': '1',
+    'de': "°",
     'es': '°'
   };  
+
+  console.log(map['de']);
+
 
   var langs = document.getElementById('langs');
   showShortcut();
@@ -65,6 +68,7 @@
   window.addEventListener('keydown', function(e) {
     var info = 'key: ' + e.key + ', keyCode: ' + e.keyCode + ', ctrlKey: ' + e.ctrlKey;
 
+    //console.log('keydown: charCode ', e.charCode);
 
     document.getElementById('status').innerHTML = '';
     document.getElementById('info').innerHTML = info;
@@ -73,14 +77,14 @@
   window.addEventListener('keypress', function(e) {
     var langs = document.getElementById('langs');
     var typedChar = String.fromCharCode(e.charCode);
+    var expected = map[langs.value];
+    var expectedChar = expected.charAt(expected.length - 1);
 
+    
+    console.log('expectedChar', expectedChar);
     console.log('typedChar', typedChar);
 
-    var expected = map[langs.value];  //'`';
-
-    console.log('expected', expected);
-
-    var shortcutPressed = e.ctrlKey && typedChar === expected;
+    var shortcutPressed = e.ctrlKey && e.shiftKey && typedChar === expectedChar;
 
     if (!shortcutPressed) {
       return;

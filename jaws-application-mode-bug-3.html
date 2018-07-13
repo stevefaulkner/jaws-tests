@@ -1,0 +1,43 @@
+<!doctype html>
+
+<html>
+	<head>
+		<title>JAWS ARIA application mode example #3</title>
+	</head>
+	<body>
+		<h2>JAWS ARIA application mode example #3</h2>
+
+		<h3>Overview</h3>
+		<p>In this example JAWS will consistently switch between forms mode and virtual mode.</p>
+
+		<ol>
+			<li><strong>Press F6</strong> to move focus to the button inside the application context.</li>
+			<li>Notice JAWS switches into forms mode.</li>
+			<li><strong>Press Tab</strong> to move focus to the button inside the document context.</li>
+			<li>Notice JAWS switches into virtual mode.</li>
+			<li><strong>Press Shift + Tab</strong> to move focus back to the button inside the application context.</li>
+			<li>Notice JAWS switches back into forms mode.</li>
+		</ol>
+
+		<div role="application">
+			<p>The following button is inside the application context</p>
+			<button type="button" id="item-1">Button 1</button>
+			<div role="document">
+				<p>The following button is inside the document context</p>
+				<button type="button">Button 2</button>
+			</div>
+		</div>
+
+		<script type="text/javascript">
+
+			document.addEventListener('keydown', function(e) {
+				if (e.keyCode === 117) {
+					e.preventDefault();
+					document.getElementById('item-1').focus();	
+				}		
+			}, false);
+
+		</script>
+
+	</body>
+</html>

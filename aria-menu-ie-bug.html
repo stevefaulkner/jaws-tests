@@ -9,19 +9,19 @@
 </style>
 
 <div id="resultslist" role="menu" tabindex="0">
-	<div role="menuitem" tabindex="-1" id="item-1">
+	<div role="menuitem" tabindex="-1">
 		<span><strong>Todd</strong> @kloots</span></span>
 	</div>
-	<div role="menuitem" tabindex="-1" id="item-2">
+	<div role="menuitem" tabindex="-1">
 		<span><strong>Trevor</strong> @trevor</span></span>
 	</div>
-	<div role="menuitem" tabindex="-1" id="item-3">
+	<div role="menuitem" tabindex="-1">
 		<span><strong>Ross</strong> @ross</span></span>
 	</div>
-	<div role="menuitem" tabindex="-1" id="item-4">
+	<div role="menuitem" tabindex="-1">
 		<span><strong>Berryl</strong> @berryl</span></span>
 	</div>
-	<div role="menuitem" tabindex="-1" id="item-5">
+	<div role="menuitem" tabindex="-1">
 		<span><strong>Wayne</strong> @wayne</span></span>
 	</div>				
 </div	>
@@ -29,15 +29,21 @@
 <script type="text/javascript">
 	(function() {
 
+		var activeId = 'active-menuitem';
+
 		var selectItem = function(node) {
 			var resultsList = document.getElementById('resultslist');
 			var selected = resultsList.querySelector('.selected');
 			if (selected) {
 				selected.classList.remove('selected');
+				selected.removeAttribute('id');
 			}
 
-			resultsList.setAttribute('aria-activedescendant', node.id);
 			node.classList.add('selected');
+			node.setAttribute('id', activeId);
+
+			resultsList.setAttribute('aria-activedescendant', '');
+			resultsList.setAttribute('aria-activedescendant', activeId);
 		};
 
 		var getInitialSelection = function(resultsList, keyCode) {
@@ -80,6 +86,9 @@
 
 			if (next) {
 				selectItem(next);
+				if (!selected) {
+					
+				}
 			}
 		}, false);	
 

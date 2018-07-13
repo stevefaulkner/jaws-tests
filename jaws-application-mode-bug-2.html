@@ -1,0 +1,137 @@
+<!doctype html>
+
+<html>
+	<head>
+		<title>JAWS ARIA application mode example #2</title>
+		<style type="text/css">
+
+			div[role="list"],
+			div[role="listitem"] {
+				border: solid 1px #000;
+			}
+
+			div[role="listitem"]:focus {
+				background: yellow;
+			}
+			
+			div[role="document"] {
+				margin: 10px;
+			}
+
+		</style>	
+	</head>
+	<body>
+		<h2>JAWS ARIA application mode example #2</h2>
+
+		<h3>Issue Summary</h3>
+		<p>When moving focus into an ARIA application context JAWS doesn't switch to forms mode.</p>
+
+		<h3>Repro Steps</h3>
+		<ol>
+			<li><strong>Press ctrl + F6</strong> to move focus to the first ARIA listitem instance on this page.</li>
+			<li>Notice JAWS does not disable the virtual navigation despite focus being moved inside an element with the <code>role</code> attribute set to "application".</li>
+		</ol>
+
+
+		<div role="main">
+			<div role="application">
+				<div role="list" aria-label="#general, three messages">
+					<div role="presentation" style="height: 150px; overflow-x: hidden; overflow-y: scroll;">
+						<div id="messagelist" role="presentation">
+
+							<div id="item-1" role="listitem" tabindex="-1" aria-label="George Zamfir at 10:00 AM Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.">
+								<div role="document">
+									<a href="#">George Zamfir</a> <a href="#">10:00 AM</a>
+									<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>
+									<button type="button">Add Reaction</button><button type="button">Reply</button>
+								</div>
+							</div>
+
+							<div role="listitem" tabindex="-1" aria-label="Todd Kloots at 10:05 AM Lectus vestibulum mattis ullamcorper velit sed ullamcorper morbi tincidunt ornare.">
+								<div role="document">
+									<a href="#">Todd Kloots</a> <a href="#">10:05 AM</a>
+									<p>Lectus vestibulum mattis ullamcorper velit sed ullamcorper morbi tincidunt ornare.</p>
+									<button type="button">Add Reaction</button><button type="button">Reply</button>
+								</div>
+							</div>
+
+							<div role="listitem" tabindex="-1" aria-label="Glen Gordon at 10:10 AM Pharetra sit amet aliquam id. Cursus mattis molestie a iaculis at.">
+								<div role="document">
+									<a href="#">Glen Gordon</a> <a href="#">10:10 AM</a>
+									<p>Pharetra sit amet aliquam id. Cursus mattis molestie a iaculis at. </p>
+									<button type="button">Add Reaction</button><button type="button">Reply</button>
+								</div>
+							</div>
+
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+
+		<script type="text/javascript">
+
+			document.addEventListener('keydown', function(e) {
+				if (e.keyCode === 117) {
+					e.preventDefault();
+					document.getElementById('item-1').focus();	
+				}		
+			}, false);
+
+			var selectItem = function(node) {
+				var messageList = document.getElementById('messagelist');
+				var selected = messageList.querySelector('.selected');
+				if (selected) {
+					selected.classList.remove('selected');
+				}
+
+				node.classList.add('selected');
+				node.focus();
+			};
+
+			var getInitialSelection = function(messageList, keyCode) {
+				if (keyCode === 38) {
+					return messageList.lastElementChild;
+				}
+
+				if (keyCode === 40) {
+					return messageList.firstElementChild;
+				}
+			};
+
+			var getNextSelection = function(current, keyCode) {
+				var next = current.nextElementSibling;
+				var prev = current.previousElementSibling;
+
+				if (keyCode === 38) {
+					return prev;
+				}
+
+				if (keyCode === 40) {
+					return next;
+				}
+			};
+
+			var messageList = document.getElementById('messagelist');
+			messageList.addEventListener('keydown', function(e) {
+				
+				var selected = messageList.querySelector('.selected');
+				var keyCode = e.keyCode;
+
+				if (!(keyCode === 38 || keyCode === 40)) {
+					return;
+				}
+
+				e.preventDefault();
+
+				var next = selected ? getNextSelection(selected, keyCode) : getInitialSelection(messageList, keyCode);
+
+				if (next) {
+					selectItem(next);
+				}
+			}, false);
+
+		</script>
+
+	</body>
+</html>

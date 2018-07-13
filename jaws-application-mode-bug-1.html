@@ -1,0 +1,163 @@
+<!doctype html>
+
+<html>
+	<head>
+		<title>JAWS ARIA application mode fix</title>
+		<style type="text/css">
+
+			div[role="list"],
+			div[role="listitem"] {
+				border: solid 1px #000;
+			}
+
+			div[role="listitem"]:focus {
+				background: yellow;
+			}			
+			
+			div[role="document"] {
+				margin: 10px;
+			}
+
+		</style>	
+	</head>
+
+	<body>
+		<h2>JAWS ARIA application mode fix</h2>
+		<p>In this example JAWS will consistently switch between forms mode and virtual mode as focus shifts between the appliction and document contexts.</p>
+
+		<ol>
+			<li><strong>Press F6</strong> to move focus to the first ARIA listitem instance on this page.</li>
+			<li>Notice JAWS automatically toggles into forms mode so the up and down arrow keys navigate the list.</li>
+			<li><strong>Press tab</strong> to move focus into a message</li>
+			<li>Notice JAWS automatically toggles the virtual navigation back on</li>
+			<li><strong>Press F6</strong> again to move focus back to the ARIA listitem instance.</li>
+			<li>Notice JAWS automatically toggles into forms mode so the up and down arrow keys navigate the list.</li>
+		</ol>
+
+		<div role="main">
+			<div role="application">
+				<div id="hidden-button" aria-hidden="true" tabindex="-1"></div>
+
+				<div role="list" aria-label="#general, three messages">
+					<div role="presentation" style="height: 150px; overflow-x: hidden; overflow-y: scroll;">
+						<div id="messagelist" role="presentation">
+
+							<div id="item-1" role="listitem" tabindex="-1" aria-label="George Zamfir at 10:00 AM Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.">
+								<div role="document">
+									<a href="#">George Zamfir</a> <a href="#">10:00 AM</a>
+									<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>
+									<button type="button">Add Reaction</button><button type="button">Reply</button>
+								</div>
+							</div>
+
+							<div role="listitem" tabindex="-1" aria-label="Todd Kloots at 10:05 AM Lectus vestibulum mattis ullamcorper velit sed ullamcorper morbi tincidunt ornare.">
+								<div role="document">
+									<a href="#">Todd Kloots</a> <a href="#">10:05 AM</a>
+									<p>Lectus vestibulum mattis ullamcorper velit sed ullamcorper morbi tincidunt ornare.</p>
+									<button type="button">Add Reaction</button><button type="button">Reply</button>
+								</div>
+							</div>
+
+							<div role="listitem" tabindex="-1" aria-label="Glen Gordon at 10:10 AM Pharetra sit amet aliquam id. Cursus mattis molestie a iaculis at.">
+								<div role="document">
+									<a href="#">Glen Gordon</a> <a href="#">10:10 AM</a>
+									<p>Pharetra sit amet aliquam id. Cursus mattis molestie a iaculis at. </p>
+									<button type="button">Add Reaction</button><button type="button">Reply</button>
+								</div>
+							</div>
+
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+
+		<script type="text/javascript">
+
+			var timerId;
+
+			var focusListItem = function(itemToFocus) {
+				var hiddenBtn = document.getElementById('hidden-button');
+
+				var onFocus = function() {
+					if (timerId) {
+						clearTimeout(timerId);
+					}
+
+					timerId = setTimeout(function() {
+						itemToFocus.focus();
+						hiddenBtn.removeEventListener('focus', onFocus, false);
+					}, 500);
+				};
+
+				hiddenBtn.addEventListener('focus', onFocus, false);
+				hiddenBtn.focus();
+			};
+
+			document.addEventListener('keydown', function(e) {
+				if (e.keyCode !== 117) {
+					return;
+				}		
+
+				e.preventDefault();
+				var listitem = e.target.closest('[role=listitem]') || document.getElementById('item-1');
+				focusListItem(listitem);
+			}, false);
+
+			var selectItem = function(node) {
+				var messageList = document.getElementById('messagelist');
+				var selected = messageList.querySelector('.selected');
+				if (selected) {
+					selected.classList.remove('selected');
+				}
+
+				node.classList.add('selected');
+				node.focus();
+			};
+
+			var getInitialSelection = function(messageList, keyCode) {
+				if (keyCode === 38) {
+					return messageList.lastElementChild;
+				}
+
+				if (keyCode === 40) {
+					return messageList.firstElementChild;
+				}
+			};
+
+			var getNextSelection = function(current, keyCode) {
+				var next = current.nextElementSibling;
+				var prev = current.previousElementSibling;
+
+				if (keyCode === 38) {
+					return prev;
+				}
+
+				if (keyCode === 40) {
+					return next;
+				}
+			};
+
+			var messageList = document.getElementById('messagelist');
+			messageList.addEventListener('keydown', function(e) {
+				
+				var selected = messageList.querySelector('.selected');
+				var keyCode = e.keyCode;
+
+				if (!(keyCode === 38 || keyCode === 40)) {
+					return;
+				}
+
+				e.preventDefault();
+
+				var next = selected ? getNextSelection(selected, keyCode) : getInitialSelection(messageList, keyCode);
+
+				if (next) {
+					selectItem(next);
+				}
+			}, false);		
+
+		</script>
+
+	</body>
+</html>
