@@ -1,7 +1,18 @@
 <!doctype html>
 
 Rich Text Input
-<div role="textbox" contenteditable="true" style="border: solid 1px #000;"></div>
+<div role="textbox" contenteditable="true" style="border: solid 1px #000;">
+	Some text
+	<span role="group" aria-label="Todd Kloots" contenteditable="false" style="background: #ccc; border: solid 1px #999;">
+		Todd Kloots
+		<button type="button" aria-label="remove Todd Kloots"></button>
+	</span>
+	<span role="group" aria-label="Lauren Bosak" contenteditable="false" style="background: #ccc; border: solid 1px #999;">
+		Lauren Bosak
+		<button type="button" aria-label="remove Lauren Bosak"></button>
+	</span>
+	Some more text
+</div>
 
 <label>
 	Simple Text Input
