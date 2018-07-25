@@ -1,21 +1,78 @@
 <!doctype html>
 
-Rich Text Input
-<div role="textbox" contenteditable="true" style="border: solid 1px #000;">
-	Some text
-	<span role="group" aria-label="Todd Kloots" contenteditable="false" style="background: #ccc; border: solid 1px #999;">
+<style type="text/css">
+	
+	#textbox-1{
+		padding: 4px 10px;
+	}
+
+	.token {
+		background: #ccc; 
+		border: solid 1px #999;
+		border-radius: 4px;
+	}
+
+	.token button:before {
+		content: 'x';
+	}
+
+</style>
+
+<div id="textbox-1" role="textbox" contenteditable="true" style="border: solid 1px #000;">
+	<span class="token" role="group" aria-label="Todd Kloots" contenteditable="false">
 		Todd Kloots
-		<button type="button" aria-label="remove Todd Kloots"></button>
-	</span>
-	<span role="group" aria-label="Lauren Bosak" contenteditable="false" style="background: #ccc; border: solid 1px #999;">
+		<button class="remove-token-btn" type="button" tabindex="-1" aria-label="Remove Todd Kloots" id="thing-1"></button>
+	</span> 
+	<span class="token" role="group" aria-label="Lauren Bosak" contenteditable="false">
 		Lauren Bosak
-		<button type="button" aria-label="remove Lauren Bosak"></button>
+		<button class="remove-token-btn" type="button" tabindex="-1" aria-label="Remove Lauren Bosak" id="thing-2"></button>
 	</span>
-	Some more text
+	some text
 </div>
 
-<label>
-	Simple Text Input
-	<input type="text" value="">
-</label>
+<script type="text/javascript">
+
+	(function() {
+
+		function getCaretPosition(element) {
+			var range = window.getSelection().getRangeAt(0);
+			var preCaretRange = range.cloneRange();
+			preCaretRange.selectNodeContents(element);
+			preCaretRange.setEnd(range.endContainer, range.endOffset);
+			return preCaretRange.toString().length;
+		}
+
+		var textEditor = document.getElementById('textbox-1');
+
+		textEditor.addEventListener('keyup', function(e) {
+			var target = e.target;
+			var cursorPos = getCaretPosition(target);
+			var keyCode = e.keyCode;
+
+			var cursorPosToId = {
+				0: 'thing-1',
+				24: 'thing-2',
+			};
+
+			var id = (keyCode == 37 || keyCode == 39) && cursorPosToId[cursorPos];
+
+			if (id) {
+				target.setAttribute('aria-activedescendant', id);
+				return;
+			}
+
+			target.removeAttribute('aria-activedescendant');
+		}, false);
+
+		textEditor.addEventListener('click', function(e) {
+			var target = e.target;
+			if (target.className === 'remove-token-btn') {
+				e.currentTarget.removeChild(target.parentNode);
+			}
+		});
+
+	})();
+
+</script>
+
 
