@@ -54,8 +54,12 @@
 				24: 'thing-2',
 			};
 
-			var id = (keyCode == 37 || keyCode == 39) && cursorPosToId[cursorPos];
+			var leftOrRight = (keyCode == 37 || keyCode == 39);
+			if (leftOrRight && target.getAttribute('aria-activedescendant')){
+				target.removeAttribute('aria-activedescendant');
+			}
 
+			var id = leftOrRight && cursorPosToId[cursorPos];
 			if (id) {
 				target.setAttribute('aria-activedescendant', id);
 				return;
