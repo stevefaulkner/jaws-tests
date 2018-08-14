@@ -36,7 +36,8 @@
 
 		<div role="main">
 			<div role="application">
-				<div id="hidden-button" aria-hidden="true" tabindex="-1"></div>
+				<div id="hidden-button-1" tabindex="-1"></div>
+				<div id="hidden-button-2" tabindex="-1"></div>
 
 				<div role="list" aria-label="#general, three messages">
 					<div role="presentation" style="height: 150px; overflow-x: hidden; overflow-y: scroll;">
@@ -78,24 +79,38 @@
 
 		<script type="text/javascript">
 
-			var timerId;
+			var timerId1;
+			var timerId2;
 
 			var focusListItem = function(itemToFocus) {
-				var hiddenBtn = document.getElementById('hidden-button');
+				var hiddenBtn1 = document.getElementById('hidden-button-1');
+				var hiddenBtn2 = document.getElementById('hidden-button-2');
 
-				var onFocus = function() {
-					if (timerId) {
-						clearTimeout(timerId);
+				var onFocus2 = function() {
+					if (timerId2) {
+						clearTimeout(timerId2);
 					}
 
-					timerId = setTimeout(function() {
+					timerId2 = setTimeout(function() {
 						itemToFocus.focus();
-						hiddenBtn.removeEventListener('focus', onFocus, false);
-					}, 1000);
+						hiddenBtn2.removeEventListener('focus', onFocus2, false);
+					}, 250);
 				};
 
-				hiddenBtn.addEventListener('focus', onFocus, false);
-				hiddenBtn.focus();
+				var onFocus1 = function() {
+					if (timerId1) {
+						clearTimeout(timerId1);
+					}
+
+					timerId1 = setTimeout(function() {
+						hiddenBtn2.focus();
+						hiddenBtn1.removeEventListener('focus', onFocus1, false);
+					}, 250);
+				};
+
+				hiddenBtn1.addEventListener('focus', onFocus1, false);
+				hiddenBtn2.addEventListener('focus', onFocus2, false);
+				hiddenBtn1.focus();
 			};
 
 			document.addEventListener('keydown', function(e) {
